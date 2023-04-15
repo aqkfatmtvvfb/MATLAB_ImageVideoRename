@@ -14,7 +14,7 @@ for iFile=1:length(AllFile)
     if strcmpi(ext,'.jpg')
         info = imfinfo(AllFile(iFile).name);
         if isfield(info,'DateTime')
-            photo_datetime = datetime(info.DateTime,'InputFormat','yyyy:MM:dd HH:mm:ss');
+            photo_datetime = datetime(info.DateTime(1:19),'InputFormat','yyyy:MM:dd HH:mm:ss');
             photo_datetime_str=char(string(photo_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
             output_name=strcat('IMG_', photo_datetime_str);
             if strncmp(input_name,output_name,19) %if already renamed IMG_yyyyMMdd_HHmmss_i.jpg, pass
