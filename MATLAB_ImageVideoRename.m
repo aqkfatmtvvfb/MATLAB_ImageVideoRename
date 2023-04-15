@@ -27,7 +27,7 @@ for iFile=1:length(AllFile)
                         warning('%s can not be renamed',strcat(input_name,ext));
                     end
                     % SONY
-                    if exist(fullfile(photo_dir,strcat(output_name ,'.ARW')),'file')
+                    if exist(fullfile(photo_dir,strcat(input_name ,'.ARW')),'file')
                         status=movefile(fullfile(photo_dir,strcat(input_name,'.ARW')),fullfile(photo_dir,strcat(output_name,'.ARW')));
                         if ~status
                             warning('%s can not be renamed',strcat(input_name,'.ARW'));
@@ -43,7 +43,7 @@ for iFile=1:length(AllFile)
                                 warning('%s can not be renamed',strcat(input_name,ext));
                             end
                             % SONY
-                            if exist(fullfile(photo_dir,[output_name '_' num2str(index) '.ARW']),'file')
+                            if exist(fullfile(photo_dir,strcat(input_name ,'.ARW')),'file')
                                 status=movefile(fullfile(photo_dir,strcat(input_name,'.ARW')),fullfile(photo_dir,[output_name '_' num2str(index) '.ARW']));
                                 if ~status
                                     warning('%s can not be renamed',strcat(input_name,'.ARW'));
