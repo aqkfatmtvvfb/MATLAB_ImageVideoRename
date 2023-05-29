@@ -33,6 +33,13 @@ for iFile=1:length(AllFile)
                             warning('%s can not be renamed',strcat(input_name,'.ARW'));
                         end
                     end
+                    % Lumix
+                    if exist(fullfile(photo_dir,strcat(input_name ,'.RW2')),'file')
+                        status=movefile(fullfile(photo_dir,strcat(input_name,'.RW2')),fullfile(photo_dir,strcat(output_name,'.RW2')));
+                        if ~status
+                            warning('%s can not be renamed',strcat(input_name,'.RW2'));
+                        end
+                    end
                 else
                     % default file exist
                     index=1;
