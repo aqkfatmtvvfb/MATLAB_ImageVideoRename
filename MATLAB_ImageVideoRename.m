@@ -13,7 +13,9 @@ for iFile=1:length(AllFile)
     [filepath,input_name,ext] = fileparts(AllFile(iFile).name);
     if strcmpi(ext,'.jpg')
         info = imfinfo(AllFile(iFile).name);
-        if isfield(info,'DateTime')
+        if isfield(info,'DigitalCamera') && isfield(info.DigitalCamera,'DateTimeDigitized')
+            info.DateTime=info.DigitalCamera.DateTimeDigitized;
+%         if isfield(info,'DateTime')
             photo_datetime = datetime(info.DateTime(1:19),'InputFormat','yyyy:MM:dd HH:mm:ss');
             photo_datetime_str=char(string(photo_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
             output_name=strcat('IMG_', photo_datetime_str);
