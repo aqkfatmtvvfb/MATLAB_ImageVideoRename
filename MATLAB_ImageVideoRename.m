@@ -15,7 +15,7 @@ for iFile=1:length(AllFile)
         info = imfinfo(AllFile(iFile).name);
         if isfield(info,'DigitalCamera') && isfield(info.DigitalCamera,'DateTimeDigitized')
             info.DateTime=info.DigitalCamera.DateTimeDigitized;
-%         if isfield(info,'DateTime')
+            %         if isfield(info,'DateTime')
             photo_datetime = datetime(info.DateTime(1:19),'InputFormat','yyyy:MM:dd HH:mm:ss');
             photo_datetime_str=char(string(photo_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
             output_name=strcat('IMG_', photo_datetime_str);
@@ -56,6 +56,13 @@ for iFile=1:length(AllFile)
                                 status=movefile(fullfile(photo_dir,strcat(input_name,'.ARW')),fullfile(photo_dir,[output_name '_' num2str(index) '.ARW']));
                                 if ~status
                                     warning('%s can not be renamed',strcat(input_name,'.ARW'));
+                                end
+                            end
+                            % Lumix
+                            if exist(fullfile(photo_dir,strcat(input_name ,'.RW2')),'file')
+                                status=movefile(fullfile(photo_dir,strcat(input_name,'.RW2')),fullfile(photo_dir,[output_name '_' num2str(index) '.RW2']));
+                                if ~status
+                                    warning('%s can not be renamed',strcat(input_name,'.RW2'));
                                 end
                             end
                             break;
