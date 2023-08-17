@@ -108,8 +108,9 @@ if isempty(I)
 end
 left_brace=find(msg=='{');
 right_brace=find(msg=='}');
-
-json_content=msg(left_brace(1):right_brace(end));
+json_header = regexp(msg,'"format"','start');
+json_start_index=find(left_brace<json_header,1,'last');
+json_content=msg(left_brace(json_start_index):right_brace(end));
 
 info=jsondecode(json_content);
 
