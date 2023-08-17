@@ -1,11 +1,7 @@
 clc
 clear
-
-cfg_RenameVideoByModifiedDate=false;
-cfg_RenameNoExifPhotoByModifiedDate=false;
-
+script_dir = pwd;
 photo_dir = uigetdir('.', 'Pick Photo Directory');
-% photo_dir ='D:\3 所有照片\MATLAB_ImageVideoRename';
 cd(photo_dir);
 AllObject=dir();
 AllFile=AllObject([AllObject.isdir]==0);
@@ -81,7 +77,7 @@ for iFile=1:length(AllFile)
         continue;
     end
 end
-cd('D:\3 所有照片\MATLAB_ImageVideoRename');
+cd(script_dir);
 
 
 
