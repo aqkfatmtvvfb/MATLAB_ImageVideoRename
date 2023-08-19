@@ -2,3 +2,5 @@
 该脚本用于整理相机或手机拍摄的照片与视频文件
 - 按照IMG_yyyymmdd_hhmmss格式重命名图片，时间来源于exif信息，会同时处理相机raw文件，目前仅支持SONY、Panasonic，用户可以按照自己的需求修改
 - 按照VID_yyyymmdd_hhmmss格式重命名图片，时间来源于编码信息，以起始时间为准。
+
+受限于GitHub限制，ffprobe压缩后上传，请先解压，或者自己下载后放入本文件夹
