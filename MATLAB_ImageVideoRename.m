@@ -1,6 +1,7 @@
 clc
 clear
 script_dir = pwd;
+setenv("PATH",getenv("PATH") + ";" +script_dir);
 photo_dir = uigetdir('.', 'Pick Photo Directory');
 cd(photo_dir);
 AllObject=dir();
