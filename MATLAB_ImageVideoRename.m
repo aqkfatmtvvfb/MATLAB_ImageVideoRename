@@ -39,6 +39,20 @@ for iFile=1:length(AllFile)
                             warning('%s can not be renamed',strcat(input_name,'.RW2'));
                         end
                     end
+                    % Canon
+                    if exist(fullfile(photo_dir,strcat(input_name ,'.CR2')),'file')
+                        status=movefile(fullfile(photo_dir,strcat(input_name,'.CR2')),fullfile(photo_dir,strcat(output_name,'.CR2')));
+                        if ~status
+                            warning('%s can not be renamed',strcat(input_name,'.CR2'));
+                        end
+                    end
+                    % xmp
+                    if exist(fullfile(photo_dir,strcat(input_name ,'.xmp')),'file')
+                        status=movefile(fullfile(photo_dir,strcat(input_name,'.xmp')),fullfile(photo_dir,strcat(output_name,'.xmp')));
+                        if ~status
+                            warning('%s can not be renamed',strcat(input_name,'.xmp'));
+                        end
+                    end
                 else
                     % default file exist
                     index=1;
@@ -60,6 +74,13 @@ for iFile=1:length(AllFile)
                                 status=movefile(fullfile(photo_dir,strcat(input_name,'.RW2')),fullfile(photo_dir,[output_name '_' num2str(index) '.RW2']));
                                 if ~status
                                     warning('%s can not be renamed',strcat(input_name,'.RW2'));
+                                end
+                            end
+                            % Canon
+                            if exist(fullfile(photo_dir,strcat(input_name ,'.CR2')),'file')
+                                status=movefile(fullfile(photo_dir,strcat(input_name,'.CR2')),fullfile(photo_dir,[output_name '_' num2str(index) '.CR2']));
+                                if ~status
+                                    warning('%s can not be renamed',strcat(input_name,'.CR2'));
                                 end
                             end
                             break;
