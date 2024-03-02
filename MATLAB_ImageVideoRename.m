@@ -111,6 +111,24 @@ for iFile=1:length(AllFile)
         else
             warning('%s has no DateTime information',strcat(input_name,ext));
         end
+    elseif strcmpi(ext,'.mov')
+        video_datetime_str=GetVideoDateTime_mov(strcat(input_name,ext));
+        if ~isempty(video_datetime_str)
+            output_name=strcat('VID_', video_datetime_str);
+            if strncmp(input_name,output_name,19) %if already renamed VID_yyyyMMdd_HHmm, pass
+                warning('%s already renamed',strcat(input_name,ext));
+                continue;
+            else
+                if ~exist(fullfile(photo_dir,strcat(output_name ,ext)),'file')
+                    status=movefile(fullfile(photo_dir,strcat(input_name,ext)),fullfile(photo_dir,strcat(output_name ,ext)));
+                    if ~status
+                        warning('%s can not be renamed',strcat(input_name,ext));
+                    end
+                end
+            end
+        else
+            warning('%s has no DateTime information',strcat(input_name,ext));
+        end
     else
         continue;
     end
@@ -147,4 +165,28 @@ end
 end
 
 
+function video_datetime_str=GetVideoDateTime_mov(video_path)
+video_datetime_str=[];
+[s,msg] = system(sprintf('ffprobe.exe -show_format %s -print_format json',video_path));
+if s~=0
+    error('ffmpeginfo failed to run FFmpeg\n\n%s',msg);
+end
 
+I = regexp(msg,'Input #','start');
+if isempty(I)
+    warning('Specified file is not FFmpeg supported media file.');
+end
+left_brace=find(msg=='{');
+right_brace=find(msg=='}');
+json_header = regexp(msg,'"format"','start');
+json_start_index=find(left_brace<json_header,1,'last');
+json_content=msg(left_brace(json_start_index):right_brace(end));
+info=jsondecode(json_content);
+if isfield(info.format.tags,'com_apple_quicktime_creationdate')
+    raw_DateTime=info.format.tags.com_apple_quicktime_creationdate; %'2024-01-29T16:55:33+0800'
+    video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
+    duration=str2double(info.format.duration);
+    video_datetime=video_datetime-seconds(duration);
+    video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
+end
+end
