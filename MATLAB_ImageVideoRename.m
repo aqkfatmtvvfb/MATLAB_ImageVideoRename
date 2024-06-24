@@ -13,7 +13,12 @@ for iFile=1:length(AllFile)
         if isfield(info,'DigitalCamera') && isfield(info.DigitalCamera,'DateTimeDigitized')
             info.DateTime=info.DigitalCamera.DateTimeDigitized;
             %         if isfield(info,'DateTime')
-            photo_datetime = datetime(info.DateTime(1:19),'InputFormat','yyyy:MM:dd HH:mm:ss');
+            try
+                photo_datetime = datetime(info.DateTime(1:19),'InputFormat','yyyy:MM:dd HH:mm:ss');
+            catch exception
+                warning('%s has wrong dateTime',strcat(input_name,'.jpg'));
+                continue;
+            end
             photo_datetime_str=char(string(photo_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
             output_name=strcat('IMG_', photo_datetime_str);
             if strncmp(input_name,output_name,19) %if already renamed IMG_yyyyMMdd_HHmmss_i.jpg, pass
@@ -129,6 +134,24 @@ for iFile=1:length(AllFile)
         else
             warning('%s has no DateTime information',strcat(input_name,ext));
         end
+    elseif strcmpi(ext,'.mpg')
+        video_datetime_str=GetVideoDateTime_mov(strcat(input_name,ext));
+        if ~isempty(video_datetime_str)
+            output_name=strcat('VID_', video_datetime_str);
+            if strncmp(input_name,output_name,19) %if already renamed VID_yyyyMMdd_HHmm, pass
+                warning('%s already renamed',strcat(input_name,ext));
+                continue;
+            else
+                if ~exist(fullfile(photo_dir,strcat(output_name ,ext)),'file')
+                    status=movefile(fullfile(photo_dir,strcat(input_name,ext)),fullfile(photo_dir,strcat(output_name ,ext)));
+                    if ~status
+                        warning('%s can not be renamed',strcat(input_name,ext));
+                    end
+                end
+            end
+        else
+            warning('%s has no DateTime information',strcat(input_name,ext));
+        end
     else
         continue;
     end
@@ -157,7 +180,7 @@ info=jsondecode(json_content);
 if isfield(info.format.tags,'creation_time')
     raw_DateTime=info.format.tags.creation_time; %'2022-06-09T01:42:56.000000Z'
     video_datetime = datetime(raw_DateTime(1:19),'TimeZone','UTC','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
-    video_datetime.TimeZone='Asia/Hong_Kong';
+    % video_datetime.TimeZone='Asia/Hong_Kong';
     duration=str2double(info.format.duration);
     video_datetime=video_datetime-seconds(duration);
     video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
