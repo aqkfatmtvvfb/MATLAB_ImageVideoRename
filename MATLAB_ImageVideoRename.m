@@ -180,7 +180,7 @@ info=jsondecode(json_content);
 if isfield(info.format.tags,'creation_time')
     raw_DateTime=info.format.tags.creation_time; %'2022-06-09T01:42:56.000000Z'
     video_datetime = datetime(raw_DateTime(1:19),'TimeZone','UTC','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
-    % video_datetime.TimeZone='Asia/Hong_Kong';
+    video_datetime.TimeZone='Asia/Hong_Kong';
     duration=str2double(info.format.duration);
     video_datetime=video_datetime-seconds(duration);
     video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
