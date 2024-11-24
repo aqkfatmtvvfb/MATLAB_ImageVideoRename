@@ -160,7 +160,7 @@ cd(script_dir);
 
 function video_datetime_str=GetVideoDateTime(video_path)
 video_datetime_str=[];
-[s,msg] = system(sprintf('ffprobe.exe -show_format %s -print_format json',video_path));
+[s,msg] = system(sprintf('ffprobe.exe -show_format "%s" -print_format json',video_path));
 if s~=0
     error('ffmpeginfo failed to run FFmpeg\n\n%s',msg);
 end
@@ -190,7 +190,7 @@ end
 
 function video_datetime_str=GetVideoDateTime_mov(video_path)
 video_datetime_str=[];
-[s,msg] = system(sprintf('ffprobe.exe -show_format %s -print_format json',video_path));
+[s,msg] = system(sprintf('ffprobe.exe -show_format "%s" -print_format json',video_path));
 if s~=0
     error('ffmpeginfo failed to run FFmpeg\n\n%s',msg);
 end
@@ -207,6 +207,12 @@ json_content=msg(left_brace(json_start_index):right_brace(end));
 info=jsondecode(json_content);
 if isfield(info.format.tags,'com_apple_quicktime_creationdate')
     raw_DateTime=info.format.tags.com_apple_quicktime_creationdate; %'2024-01-29T16:55:33+0800'
+    video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
+    duration=str2double(info.format.duration);
+    video_datetime=video_datetime-seconds(duration);
+    video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
+elseif isfield(info.format.tags,'creation_time')
+    raw_DateTime=info.format.tags.creation_time; %'2024-01-29T16:55:33+0800'
     video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
     duration=str2double(info.format.duration);
     video_datetime=video_datetime-seconds(duration);
