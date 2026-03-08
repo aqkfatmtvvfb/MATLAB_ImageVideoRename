@@ -176,8 +176,7 @@ json_start_index=find(left_brace<json_header,1,'last');
 json_content=msg(left_brace(json_start_index):right_brace(end));
 
 info=jsondecode(json_content);
-
-if isfield(info.format.tags,'creation_time')
+if isfield(info,'format')&&isfield(info.format,'tags')&&isfield(info.format.tags,'creation_time')
     raw_DateTime=info.format.tags.creation_time; %'2022-06-09T01:42:56.000000Z'
     video_datetime = datetime(raw_DateTime(1:19),'TimeZone','UTC','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
     % video_datetime.TimeZone='Asia/Hong_Kong';
@@ -205,17 +204,19 @@ json_header = regexp(msg,'"format"','start');
 json_start_index=find(left_brace<json_header,1,'last');
 json_content=msg(left_brace(json_start_index):right_brace(end));
 info=jsondecode(json_content);
-if isfield(info.format.tags,'com_apple_quicktime_creationdate')
-    raw_DateTime=info.format.tags.com_apple_quicktime_creationdate; %'2024-01-29T16:55:33+0800'
-    video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
-    duration=str2double(info.format.duration);
-    video_datetime=video_datetime-seconds(duration);
-    video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
-elseif isfield(info.format.tags,'creation_time')
-    raw_DateTime=info.format.tags.creation_time; %'2024-01-29T16:55:33+0800'
-    video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
-    duration=str2double(info.format.duration);
-    video_datetime=video_datetime-seconds(duration);
-    video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
+if isfield(info,'format')&&isfield(info.format,'tags')
+    if isfield(info.format.tags,'com_apple_quicktime_creationdate')
+        raw_DateTime=info.format.tags.com_apple_quicktime_creationdate; %'2024-01-29T16:55:33+0800'
+        video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
+        duration=str2double(info.format.duration);
+        video_datetime=video_datetime-seconds(duration);
+        video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
+    elseif isfield(info.format.tags,'creation_time')
+        raw_DateTime=info.format.tags.creation_time; %'2024-01-29T16:55:33+0800'
+        video_datetime = datetime(raw_DateTime(1:19),'TimeZone','Asia/Hong_Kong','InputFormat','yyyy-MM-dd''T''HH:mm:ss');
+        duration=str2double(info.format.duration);
+        video_datetime=video_datetime-seconds(duration);
+        video_datetime_str=char(string(video_datetime,'yyyyMMdd_HHmmss')); % char() change string 2 char to use [str1 str2]
+    end
 end
 end
